@@ -1,9 +1,6 @@
 'use client';
-import React, {useState,useEffect} from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import React, {useState} from 'react';
 import styles from './styles.module.scss';
-import Wallet from "../../../public/account-summary/wallet.svg"
 import Modal from '../modal';
 import { useGetUserBalance } from './api/useGetUserBalance';
 import ClipLoader from "react-spinners/ClipLoader";
@@ -12,15 +9,9 @@ const AccountSummary = () => {
     const [isOpen, setIsOpen] = useState(false);
     const {data, isLoading, isError} = useGetUserBalance(10);
     
-
-
-
-
     const handleClose = () => {
         setIsOpen(false);
     }
-
-
 
     return (
         <section className = {styles.container}>
@@ -31,7 +22,7 @@ const AccountSummary = () => {
                 <div className = {styles.leftSection}>
                     <div className = {styles.item}>
                     <div className = {styles.icon}>
-                    <Image src={Wallet} alt="wallet" width={0} height={0} />
+                    <img src= "/account-summary/wallet.svg" alt="wallet" />
                     </div>
                     </div>
                     

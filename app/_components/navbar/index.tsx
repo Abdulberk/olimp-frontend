@@ -1,10 +1,5 @@
 'use client';
 import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import Bell from "../../../public/navbar/bell.svg"  
-import Logo from "../../../public/navbar/olimp-logo.svg"
-import Search from "../../../public/navbar/search.svg"
 import styles from './styles.module.scss';
 
 
@@ -19,8 +14,8 @@ const navLinks = [
 
 
 const tools = [
-    { id: 1, icon: Search },
-    { id: 2, icon: Bell },
+    { id: 1, icon: "/navbar/search.svg" },
+    { id: 2, icon: "/navbar/bell.svg" },
   
     ];
 
@@ -29,7 +24,7 @@ export default function Navbar() {
     <nav className={styles.navbar}>
         <div className = {styles.innerContainer}>
             <div className = {styles.logo} >
-                <Image src={Logo} alt="Olimp Logo" />
+                <img src="/navbar/olimp-logo.svg" alt="Olimp Logo" />
 
             </div>
 
@@ -37,22 +32,22 @@ export default function Navbar() {
                 <ul className={styles.navLinks}>
                     {navLinks.map((link, index) => (
                         <li key={index}>
-                            <Link href={link.path}>
+                            <a href={link.path}>
                                 {link.title}
-                            </Link>
+                            </a>
                         </li>
                     ))}
                 </ul>
                 <div className = {styles.toolsContainer}>
                     {tools.map((tool, index) => (
                         <div key={index} className = {styles.item}>
-                            <Image src={tool.icon} alt="tool" />
+                            <img src={tool.icon} alt="tool" />
                         </div>
                     ))}
                     </div>
 
                     <div className = {styles.profileContainer}>
-                       <Image src="/navbar/samp1.png" alt="profile" width={0} height={0} layout="responsive" />
+                       <img src="/navbar/samp1.png" alt="profile"  />
                         </div>
             </div>
 

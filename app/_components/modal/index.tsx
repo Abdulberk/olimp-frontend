@@ -1,12 +1,12 @@
 'use client';
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import React, {useRef, useState,useEffect } from "react";
 import styles from "./styles.module.scss";
 import { useGetRecipients } from "./api/useGetRecipientsQuery";
 import { useMultipleTransactionMutation } from "./api/useMultipleTransactionMutation";
-import Receiver from "../../../public/recent-transactions/receiver.png";
-import Image from "next/image";
 import ClipLoader from "react-spinners/ClipLoader";
+
+
 
 
 interface PersonCardProps {
@@ -18,12 +18,12 @@ interface PersonCardProps {
   onClick: () => void;
 }
 
-const PersonCard: React.FC<PersonCardProps> = ({ person, selected, onClick }) => {
+const PersonCard = ({ person, selected, onClick }:PersonCardProps) => {
   return (
     <div className={`${styles.person} ${selected ? styles.selected : ""}`} onClick={onClick}>
       <div className={styles.leftSide}>
         <div className={styles.avatar}>
-          <Image src={Receiver} alt="avatar" />
+          <img src="/recent-transactions/receiver.png" alt="avatar" />
         </div>
         <div className={styles.infoContainer}>
           <p className={styles.name}>{person.name}</p>

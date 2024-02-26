@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import styles from './styles.module.scss';
-import Receiver from "../../../public/recent-transactions/receiver.png"
+
 
 interface TransactionProps {
     name: string,
@@ -20,7 +20,7 @@ const Transaction = ({
         <li className = {styles.transaction} >  
             <div className = {styles.leftSide}>
             <div className = {styles.avatar}>
-                <Image src={Receiver} alt = "avatar" />
+                <img src="../../../public/recent-transactions/receiver.png" alt = "avatar" />
             </div>
                 <div className={styles.infoContainer}>
                     <p className={styles.paymentToName}>{
