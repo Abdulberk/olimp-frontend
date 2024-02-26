@@ -1,13 +1,10 @@
-'use client';
+"use client";
 import { motion, AnimatePresence } from "framer-motion";
-import React, {useRef, useState,useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 import { useGetRecipients } from "./api/useGetRecipientsQuery";
 import { useMultipleTransactionMutation } from "./api/useMultipleTransactionMutation";
 import ClipLoader from "react-spinners/ClipLoader";
-
-
-
 
 interface PersonCardProps {
   person: {
@@ -18,9 +15,12 @@ interface PersonCardProps {
   onClick: () => void;
 }
 
-const PersonCard = ({ person, selected, onClick }:PersonCardProps) => {
+const PersonCard = ({ person, selected, onClick }: PersonCardProps) => {
   return (
-    <div className={`${styles.person} ${selected ? styles.selected : ""}`} onClick={onClick}>
+    <div
+      className={`${styles.person} ${selected ? styles.selected : ""}`}
+      onClick={onClick}
+    >
       <div className={styles.leftSide}>
         <div className={styles.avatar}>
           <img src="/recent-transactions/receiver.png" alt="avatar" />
@@ -30,66 +30,54 @@ const PersonCard = ({ person, selected, onClick }:PersonCardProps) => {
           <p className={styles.userId}>{person.id}</p>
         </div>
       </div>
-      <input type = "checkbox" 
-      checked = {selected}
-      onChange = {onClick}
-      />
-
+      <input type="checkbox" checked={selected} onChange={onClick} />
     </div>
   );
 };
 
-
-
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-    senderId: number;
+  senderId: number;
 }
 
-const Modal = ({ isOpen, onClose, senderId}: ModalProps) => {
+const Modal = ({ isOpen, onClose, senderId }: ModalProps) => {
+  const [amount, setAmount] = useState(0);
+  const [selectedPersonIds, setSelectedPersonIds] = useState<number[]>([]);
+  const [persons, setPersons] = useState([]);
+  const { data, isLoading, isError } = useGetRecipients();
+  const sendMoney = useMultipleTransactionMutation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const [amount, setAmount] = useState(0);
-    const [selectedPersonIds, setSelectedPersonIds] = useState<number[]>([]);
-    const [persons, setPersons] = useState([]);
-    const { data, isLoading, isError } = useGetRecipients();
-    const sendMoney = useMultipleTransactionMutation();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    
-
-    const handleChecBoxChange = (id: number) => {
-        if (selectedPersonIds.includes(id)) {
-            setSelectedPersonIds(selectedPersonIds.filter((personId) => personId !== id));
-        } else {
-            setSelectedPersonIds([...selectedPersonIds, id]);
-        }
+  const handleChecBoxChange = (id: number) => {
+    if (selectedPersonIds.includes(id)) {
+      setSelectedPersonIds(
+        selectedPersonIds.filter((personId) => personId !== id)
+      );
+    } else {
+      setSelectedPersonIds([...selectedPersonIds, id]);
     }
+  };
 
-    const handleSubmit = () => {
-        setIsSubmitting(true);
-        sendMoney.mutateAsync({ receiverIds: selectedPersonIds, amount, senderId }).finally(() => {
-            setIsSubmitting(false);
-        }
-        )
+  const handleSubmit = () => {
+    setIsSubmitting(true);
+    sendMoney
+      .mutateAsync({ receiverIds: selectedPersonIds, amount, senderId })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleSubmit();
+  };
+
+  useEffect(() => {
+    if (data) {
+      setPersons(data);
     }
-
-
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      handleSubmit();
-    }
-
-    
-
-    useEffect(() => {
-        if (data) {
-            setPersons(data);
-        }
-    }, [data]);
-
-
+  }, [data]);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -119,59 +107,66 @@ const Modal = ({ isOpen, onClose, senderId}: ModalProps) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
-        className = {styles.modalContainer}
+          className={styles.modalContainer}
         >
           <motion.div
             initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.5 }}
             transition={{ duration: 0.3 }}
-          className={styles.innerContainer}
+            className={styles.innerContainer}
             ref={modalRef}
           >
             <form className={styles.form} onSubmit={handleFormSubmit}>
-            <h1>Select persons to send money</h1>
-            <div className = {styles.personsContainer}>
+              <h1>Select persons to send money</h1>
+              <div className={styles.personsContainer}>
                 {persons?.map((person: any) => (
-                    <PersonCard
+                  <PersonCard
                     key={person.id}
                     person={person}
                     selected={selectedPersonIds.includes(person.id)}
                     onClick={() => handleChecBoxChange(person.id)}
-                    />
+                  />
                 ))}
-            </div>
-            <div className = {styles.inputContainer}>
-             
-              <label>
-                Amount:
-                <input
-                  type="text"
-                  value={amount}
-                  disabled={isSubmitting}
-                  onChange={(e) => setAmount(Number(e.target.value))}
-                />
-              </label>
-            </div>
-            <button onClick={handleSubmit}
-            disabled = {isSubmitting || selectedPersonIds.length === 0 || amount === 0}
+              </div>
+              <div className={styles.inputContainer}>
+                <label htmlFor="amount">Amount</label>
+                  <input
+                    id="amount"
+                    type="text"
+                    value={amount}
+                    disabled={isSubmitting}
+                    onChange={(e) => setAmount(Number(e.target.value))}
+                  />
+               
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={
+                  isSubmitting || selectedPersonIds.length === 0 || amount === 0
+                }
+              >
+                {isSubmitting ? (
+                  <ClipLoader color={"#123abc"} size={22} />
+                ) : (
+                  "Send Money"
+                )}
+              </button>
 
-            
-            >
-              {isSubmitting ?  <ClipLoader color={"#123abc"}  size={22} /> : "Send Money"}
-            </button>
-
-            <div className = {styles.statusContainer} >
-                {sendMoney.isError && <p className = {styles.error}>{
-                  sendMoney.error.message || "Error sending money"
-                }</p>}
-                {sendMoney.isSuccess && <p className = {styles.success}>
-                  Money sent successfully to {selectedPersonIds.length} people
-                  </p>}
-
+              <div className={styles.statusContainer}>
+                {sendMoney.isError && (
+                  <p className={styles.error}>
+                    {sendMoney.error.message || "Error sending money"}
+                  </p>
+                )}
+                {sendMoney.isSuccess && (
+                  <p className={styles.success}>
+                    Money sent successfully to {selectedPersonIds.length}{" "}
+                    people.
+                  </p>
+                )}
               </div>
             </form>
-
           </motion.div>
         </motion.div>
       )}
