@@ -5,6 +5,14 @@ import Modal from "../modal";
 import { useGetUserBalance } from "./api/useGetUserBalance";
 import ClipLoader from "react-spinners/ClipLoader";
 
+
+export enum Currency {
+    USD = "USD",
+    GBP = "GBP",
+    EUR = "EUR",
+    }
+
+
 const AccountSummary = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data, isLoading, isError } = useGetUserBalance(10);
@@ -13,11 +21,12 @@ const AccountSummary = () => {
     setIsOpen(false);
   };
 
+  
 
-  const formatCurrency = (amount: number) => {
+  const formatCurrency = (amount: number,selectedCurrency:Currency) => {
     return amount.toLocaleString("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: selectedCurrency || Currency.USD,
     });
   }
 
@@ -41,7 +50,7 @@ const AccountSummary = () => {
               ) : isError ? (
                 "Error fetching balance"
               ) : (
-                formatCurrency(data?.balance || 0)
+                formatCurrency(data?.balance || 0,data.currency)
               )}
             </p>
             <p className={styles.subText}>
