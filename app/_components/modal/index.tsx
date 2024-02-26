@@ -6,11 +6,13 @@ import { useGetRecipients } from "./api/useGetRecipientsQuery";
 import { useMultipleTransactionMutation } from "./api/useMultipleTransactionMutation";
 import ClipLoader from "react-spinners/ClipLoader";
 
+interface Person {
+  id: number;
+  name: string;
+}
+
 interface PersonCardProps {
-  person: {
-    id: number;
-    name: string;
-  };
+  person: Person;
   selected: boolean;
   onClick: () => void;
 }
@@ -120,13 +122,14 @@ const Modal = ({ isOpen, onClose, senderId }: ModalProps) => {
             <form className={styles.form} onSubmit={handleFormSubmit}>
               <h1>Select persons to send money</h1>
               <div className={styles.personsContainer}>
-                {persons?.map((person: any) => (
+                {persons?.filter((person:Person) => person.id !== senderId).map((person:Person) => (
                   <PersonCard
-                    key={person.id}
-                    person={person}
-                    selected={selectedPersonIds.includes(person.id)}
-                    onClick={() => handleChecBoxChange(person.id)}
-                  />
+                  key={person.id}
+                  person={person}
+                  selected={selectedPersonIds.includes(person.id)}
+                  onClick={() => handleChecBoxChange(person.id)}
+                />
+                  
                 ))}
               </div>
               <div className={styles.inputContainer}>
