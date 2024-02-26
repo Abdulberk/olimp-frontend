@@ -20,7 +20,7 @@ const Transaction = ({
         <li className = {styles.transaction} >  
             <div className = {styles.leftSide}>
             <div className = {styles.avatar}>
-                <img src="../../../public/recent-transactions/receiver.png" alt = "avatar" />
+                <img src="/recent-transactions/receiver.png" alt = "avatar" />
             </div>
                 <div className={styles.infoContainer}>
                     <p className={styles.paymentToName}>{
