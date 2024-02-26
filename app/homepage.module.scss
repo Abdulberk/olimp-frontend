@@ -1,0 +1,18 @@
+
+.container {
+    display:grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    margin-left: 160px;
+    margin-right: 160px;
+    
+    height:auto;
+    background-color: #FFF;
+    max-width:960px;
+    margin : 0 auto;
+    margin-top: 40px;
+    row-gap: 32px;
+    
+
+
+}

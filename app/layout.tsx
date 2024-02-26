@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import Navbar from "./_components/navbar";
+import "./globals.css"
+import { ReactQueryClientProvider } from "./QueryClientProvider";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,8 +18,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <ReactQueryClientProvider>
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Navbar />
+        
+        {children}
+  
+       
+        </body>
     </html>
+    </ReactQueryClientProvider>
   );
 }
+
