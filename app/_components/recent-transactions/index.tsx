@@ -34,7 +34,16 @@ const Transaction = ({
   status,
   receivers,
 }: Transaction) => {
-  const paymentToName = receivers.map((receiver) => receiver.name).join(", ");
+    const currentUserId = 10;
+  
+    const isPaymentTo = sender.id === currentUserId;
+
+    const paymentToName = isPaymentTo
+      ? receivers.map((receiver) => receiver.name).join(", ")
+      : sender.name;
+  
+    const actionText = isPaymentTo ? "Payment to" : "Payment from";
+  
 
   const formatDate = (date: string) => {
     const newDate = new Date(date);
@@ -47,6 +56,10 @@ const Transaction = ({
       hour12: true,
     });
   };
+
+
+  const addOrMinus = isPaymentTo ? "-" : "+";
+
 
   const formatCurrency = (amount: number, selectedCurrency: Currency) => {
     return amount.toLocaleString("en-US", {
@@ -63,13 +76,14 @@ const Transaction = ({
         </div>
         <div className={styles.infoContainer}>
           <p className={styles.paymentToName}>
-            {"Payment to " + paymentToName}
+            {actionText} {paymentToName}
           </p>
           <p className={styles.paymentDate}>{formatDate(createdAt)}</p>
         </div>
       </div>
       <p className={styles.amount}>
-        {formatCurrency(parseFloat(amount), Currency.USD)}
+        {addOrMinus}
+        {formatCurrency(Number(amount), Currency.USD)}
       </p>
     </li>
   );
