@@ -27,6 +27,7 @@ const AccountSummary = () => {
     return amount.toLocaleString("en-US", {
       style: "currency",
       currency: selectedCurrency || Currency.USD,
+        
     });
   }
 
@@ -58,7 +59,7 @@ const AccountSummary = () => {
                 ? "Loading..."
                 : isError
                 ? "Error fetching balance"
-                : "Available Balance"}
+                : `Available balance in ${data.currency} `}
             </p>
           </div>
         </div>
@@ -69,9 +70,13 @@ const AccountSummary = () => {
       <div className={styles.accountBalance}>
         <h3>Account Balance</h3>
         <span className={styles.progressBar}></span>
-        <p className={styles.balance}>{data?.balance || 0}</p>
+        <p className={styles.balance}>{
+            formatCurrency(data?.balance || 0,data?.currency)
+        }</p>
         <p className={styles.balance}>
-          You have {data?.balance || 0} in your account. This includes your
+          You have {
+            formatCurrency(data?.balance || 0,data?.currency)
+          } in your account. This includes your
           available balance and any pending transactions.
         </p>
       </div>
